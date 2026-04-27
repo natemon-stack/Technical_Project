@@ -59,7 +59,7 @@ CREATE TABLE `brands` (
 -- Dumping data for table `brands`
 --
 
-INSERT INTO `brands` (`id`, `name`) VALUES
+INSERT INTO `Brands` (`id`, `name`) VALUES
 (1, 'NVIDIA'),
 (2, 'AMD'),
 (3, 'Intel');
