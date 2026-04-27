@@ -1,0 +1,53 @@
+body {
+    font-family: Arial;
+    background: #828186cd;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    width: 400px;
+    margin: auto;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+}
+
+select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px;
+    width: 100%;
+    background: #000000;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #948f8f;
+}
+
+.result-box {
+    text-align: center;
+}
