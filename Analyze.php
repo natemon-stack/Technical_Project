@@ -1,5 +1,5 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "hardware_performance");
+include 'connectdb.php';
 
 // Validate request
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
