@@ -1,65 +1,85 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "hardware_performance");
+include 'connectdb.php';
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>PC Upgrade Advisor</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h1>PC Upgrade Advisor</h1>
+<div class="container">
 
-<form id="hardwareForm">
-    <label>CPU:</label>
-    <select name="cpu_id" required>
-        <?php
-        $cpus = $conn->query("SELECT id, name FROM cpus");
-        while($row = $cpus->fetch_assoc()) {
-            echo "<option value='{$row['id']}'>{$row['name']}</option>";
-        }
-        ?>
-    </select>
+    <h1>PC Upgrade Advisor</h1>
 
-    <br><br>
+    <form id="hardwareForm" class="card">
 
-    <label>GPU:</label>
-    <select name="gpu_id" required>
-        <?php
-        $gpus = $conn->query("SELECT id, name FROM gpus");
-        while($row = $gpus->fetch_assoc()) {
-            echo "<option value='{$row['id']}'>{$row['name']}</option>";
-        }
-        ?>
-    </select>
+        <label>CPU:</label>
+        <select name="cpu_id" required>
+            <?php
+            $cpus = $conn->query("SELECT id, name FROM cpus");
 
-    <br><br>
-    <button type="submit">Analyze System</button>
-</form>
+            while($row = $cpus->fetch_assoc()) {
+                ?>
+                <option value="<?php echo $row['id']; ?>">
+                    <?php echo $row['name']; ?>
+                </option>
+                <?php
+            }
+            ?>
+        </select>
 
-<hr>
+        <br>
 
-<div id="result"></div>
+        <label>GPU:</label>
+        <select name="gpu_id" required>
+            <?php
+            $gpus = $conn->query("SELECT id, name FROM gpus");
+
+            while($row = $gpus->fetch_assoc()) {
+                ?>
+                <option value="<?php echo $row['id']; ?>">
+                    <?php echo $row['name']; ?>
+                </option>
+                <?php
+            }
+            ?>
+        </select>
+
+        <br>
+
+        <button type="submit">Analyze System</button>
+
+    </form>
+
+    <div id="result" class="card"></div>
+
+</div>
 
 <script>
 document.getElementById("hardwareForm").addEventListener("submit", function(e) {
+
     e.preventDefault();
 
-    let formData = new FormData(this);
+    var formData = new FormData(this);
 
     fetch("analyze.php", {
         method: "POST",
         body: formData
     })
-    .then(res => res.text())
-    .then(data => {
+    .then(function(res) {
+        return res.text();
+    })
+    .then(function(data) {
         document.getElementById("result").innerHTML = data;
     })
-    .catch(err => {
+    .catch(function(err) {
         document.getElementById("result").innerHTML = "Error: " + err;
     });
+
 });
 </script>
 
