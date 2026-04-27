@@ -1,75 +1,68 @@
 <?php
 include 'connectdb.php';
-
-<?php
-include 'db.php';
-
-if (isset($_POST['save'])) {
-    $cpu = $_POST['cpu'];
-    $gpu = $_POST['gpu'];
-
-    $conn->query("INSERT INTO user_systems (cpu_id, gpu_id) VALUES ($cpu, $gpu)");
-}
-
-$cpus = $conn->query("SELECT * FROM cpus");
-$gpus = $conn->query("SELECT * FROM gpus");
-
-$analysis = $conn->query("SELECT * FROM bottleneck_analysis");
-$recommendations = $conn->query("SELECT * FROM system_recommendation");
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hardware Analyzer</title>
+    <title>PC Upgrade Advisor</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<h1>PC Hardware Analyzer</h1>
+<div class="container">
 
-<!-- FORM -->
-<form method="POST">
-    <h2>Select Your System</h2>
+    <h1>PC Upgrade Advisor</h1>
 
-    <select name="cpu">
-        <?php while($row = $cpus->fetch_assoc()): ?>
-            <option value="<?= $row['id'] ?>">
-                <?= $row['name'] ?>
-            </option>
-        <?php endwhile; ?>
-    </select>
+    <form id="hardwareForm" class="card">
 
-    <select name="gpu">
-        <?php while($row = $gpus->fetch_assoc()): ?>
-            <option value="<?= $row['id'] ?>">
-                <?= $row['name'] ?>
-            </option>
-        <?php endwhile; ?>
-    </select>
+        <label>CPU:</label>
+        <select name="cpu_id" required>
+            <?php
+            $cpus = $conn->query("SELECT id, name FROM cpus");
+            while($row = $cpus->fetch_assoc()) {
+                echo "<option value='{$row['id']}'>{$row['name']}</option>";
+            }
+            ?>
+        </select>
 
-    <button name="save">Save System</button>
-</form>
+        <label>GPU:</label>
+        <select name="gpu_id" required>
+            <?php
+            $gpus = $conn->query("SELECT id, name FROM gpus");
+            while($row = $gpus->fetch_assoc()) {
+                echo "<option value='{$row['id']}'>{$row['name']}</option>";
+            }
+            ?>
+        </select>
 
-<hr>
+        <button type="submit">Analyze System</button>
+    </form>
 
-<!-- BOTTLENECK -->
-<h2>Bottleneck Analysis</h2>
-<?php while($row = $analysis->fetch_assoc()): ?>
-    <p>
-        <?= $row['cpu'] ?> + <?= $row['gpu'] ?> → <?= $row['bottleneck'] ?>
-    </p>
-<?php endwhile; ?>
+    <div id="result" class="card result-box"></div>
 
-<hr>
+</div>
 
-<!-- RECOMMENDATIONS -->
-<h2>Recommendations</h2>
-<?php while($row = $recommendations->fetch_assoc()): ?>
-    <p>
-        <?= $row['cpu'] ?> + <?= $row['gpu'] ?> → <?= $row['recommendation'] ?>
-    </p>
-<?php endwhile; ?>
+<script>
+document.getElementById("hardwareForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    let formData = new FormData(this);
+
+    fetch("analyze.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.text())
+    .then(data => {
+        document.getElementById("result").innerHTML = data;
+    })
+    .catch(err => {
+        document.getElementById("result").innerHTML = "Error: " + err;
+    });
+});
+</script>
 
 </body>
 </html>
