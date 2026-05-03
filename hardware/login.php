@@ -1,59 +1,88 @@
 <?php
 session_start();
+include "connectdb.php";
 
-$conn = new mysqli("localhost", "root", "", "hardware_performance");
+$username = $password = "";
+$errors = [];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+    
+    if (empty($username)) {
+        $errors[] = "Username is required";
+    }
 
-    $username = trim($_POST['username']);
-    $password = $_POST['password'];
+    if (empty($password)) {
+        $errors[] = "Password is required";
+    }
+    if (empty($errors)) {
+        $sql = "SELECT * FROM users WHERE username='$username'";
+        $result = $conn->query($sql);
 
-    $stmt = $conn->prepare(
-        "SELECT * FROM users WHERE username = ?"
-    );
+        if ($result && $result->num_rows > 0) {
+            $row = $result->fetch_assoc();
 
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
+            if (password_verify($password, $row["password"])) {
+                $_SESSION["user_id"] = $row["id"];
+                $_SESSION["username"] = $row["username"];
+                header("Location: index.php");
 
-    $result = $stmt->get_result();
+                exit();
 
-    if ($result->num_rows > 0) {
-
-        $user = $result->fetch_assoc();
-
-        if (password_verify($password, $user['password'])) {
-
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
-
-            header("Location: index.php");
-            exit;
+            } else {
+                $errors[] = "Incorrect password";
+            }
 
         } else {
-            echo "Incorrect password";
+            $errors[] = "User not found";
         }
-
-    } else {
-        echo "User not found";
     }
 }
 ?>
 
-<form method="POST">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
 
-    Username:<br>
-    <input type="text" name="username" required>
+</head>
+<body>
+
+<h2>Login</h2>
+
+<?php
+if (!empty($errors)) {
+    foreach ($errors as $error) {
+        echo "<p style='color:red;'>$error</p>";
+    }
+}
+?>
+<form method="POST" action="">
+    <label>Username:</label><br>
+    <input 
+        type="text" 
+        name="username"
+        value="<?php echo $username; ?>"
+    >
 
     <br><br>
-
-    Password:<br>
-    <input type="password" name="password" required>
-
+    <label>Password:</label><br>
+    <input 
+        type="password" 
+        name="password"
+    >
     <br><br>
-
-    <button type="submit">Login</button>
-
+    <button type="submit">
+        Login
+    </button>
 </form>
 
 <br>
-<a href="signup.php">Create an account</a>
+<a href="signup.php">
+    Create an account
+
+</a>
+
+</body>
+</html>
