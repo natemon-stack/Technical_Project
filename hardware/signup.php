@@ -1,37 +1,42 @@
 <?php
 session_start();
-
-$conn = new mysqli("localhost", "root", "", "hardware_performance");
+include 'connectdb.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $username = trim($_POST['username']);
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $username = trim($_POST["username"]);
+    $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
-    $stmt = $conn->prepare(
-        "INSERT INTO users (username, password) VALUES (?, ?)"
-    );
-
+    $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+    $stmt = $conn->prepare($sql);
     $stmt->bind_param("ss", $username, $password);
 
     if ($stmt->execute()) {
-        echo "Signup successful";
+        echo "Signup successful!";
     } else {
-        echo "Username already exists";
+        echo "Error: Username may already exist.";
     }
 }
 ?>
 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Sign Up</h2>
+
 <form method="POST">
 
-    Username:<br>
+    <label>Username:</label><br>
     <input type="text" name="username" required>
-
     <br><br>
 
-    Password:<br>
+    <label>Password:</label><br>
     <input type="password" name="password" required>
-
     <br><br>
 
     <button type="submit">Sign Up</button>
@@ -40,3 +45,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <br>
 <a href="login.php">Already have an account? Login</a>
+
+</body>
+</html>
