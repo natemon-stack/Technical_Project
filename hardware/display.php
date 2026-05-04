@@ -3,41 +3,48 @@
 include "connectdb.php";
 
 // SQL Query
-$sql = "SELECT  u.id,c.name AS cpu, g.name AS gpu,u.ram_amount FROM user_systems u
-JOIN cpus c
-ON u.cpu_id = c.id
-JOIN gpus g
-ON u.gpu_id = g.id
+$sql = "SELECT user_systems.id, users.username, cpus.name AS cpu, gpus.name AS gpu, user_systems.ram_amount FROM user_systems
+JOIN users
+ON user_systems.user_id = users.id
+JOIN cpus
+ON user_systems.cpu_id = cpus.id
+JOIN gpus
+ON user_systems.gpu_id = gpus.id
 ";
 
 $result = $conn->query($sql);
+
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Display Hardware Systems</title>
+
+    <title>Display Systems</title>
     <link rel="stylesheet" href="style.css">
 
 </head>
+
 <body>
 
 <h1>Saved Hardware Systems</h1>
-<?php
 
+<?php
 if ($result->num_rows > 0) {
     echo "<table border='1'>";
     echo "<tr>";
     echo "<th>System ID</th>";
+    echo "<th>Username</th>";
     echo "<th>CPU</th>";
     echo "<th>GPU</th>";
     echo "<th>RAM</th>";
     echo "<th>Action</th>";
     echo "</tr>";
- 
-  while($row = $result->fetch_assoc()) {
+
+    while($row = $result->fetch_assoc()) {
         echo "<tr>";
         echo "<td>" . $row["id"] . "</td>";
+        echo "<td>" . $row["username"] . "</td>";
         echo "<td>" . $row["cpu"] . "</td>";
         echo "<td>" . $row["gpu"] . "</td>";
         echo "<td>" . $row["ram_amount"] . "GB</td>";
@@ -53,6 +60,7 @@ if ($result->num_rows > 0) {
 } else {
     echo "No systems found";
 }
+
 ?>
 
 </body>
