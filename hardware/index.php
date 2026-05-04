@@ -38,6 +38,12 @@ if ($result->num_rows > 0) {
     <title>PC Upgrade Advisor</title>
     <link rel="stylesheet" href="style.css">
 
+    <a href="display.php">
+    <button type="button">
+        View Saved Systems
+    </button>
+</a>
+
 </head>
 
 <body>
