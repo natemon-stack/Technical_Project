@@ -43,11 +43,8 @@ if ($result->num_rows > 0) {
 <body>
 <div class="container">
 
-     <a href="display.php">
-    <button type="button">
-        View Saved Systems
-    </button>
-    </a>
+    <a href="display.php">View Saved Systems</a>
+    <br><br>
     
     <a href="logout.php">Logout</a>
     <h1>PC Upgrade Advisor</h1>
