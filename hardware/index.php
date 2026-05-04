@@ -37,18 +37,18 @@ if ($result->num_rows > 0) {
 <head>
     <title>PC Upgrade Advisor</title>
     <link rel="stylesheet" href="style.css">
-
-    <a href="display.php">
-    <button type="button">
-        View Saved Systems
-    </button>
-</a>
-
+    
 </head>
 
 <body>
 <div class="container">
 
+     <a href="display.php">
+    <button type="button">
+        View Saved Systems
+    </button>
+    </a>
+    
     <a href="logout.php">Logout</a>
     <h1>PC Upgrade Advisor</h1>
     <form id="hardwareForm" class="card">
