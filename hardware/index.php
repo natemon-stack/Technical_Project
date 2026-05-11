@@ -8,88 +8,182 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $userId = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT * FROM user_systems WHERE user_id = ? ORDER BY id DESC LIMIT 1");
-$stmt->bind_param("i", $userId);
-$stmt->execute();
-$result = $stmt->get_result();
 
-$selectedCPU = $selectedGPU = $selectedRAM = "";
+$result = $conn->query("SELECT * FROM user_systems WHERE user_id = $userId ORDER BY id DESC LIMIT 1");
+
+$selectedCPU = "";
+$selectedGPU = "";
+$selectedRAM = "";
+
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
     $selectedCPU = $row['cpu_id'];
     $selectedGPU = $row['gpu_id'];
     $selectedRAM = $row['ram_amount'];
+
 }
-?>
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PC Upgrade Advisor</title>
-    <link rel="stylesheet" href="style.css">
+<title>PC Upgrade Advisor</title>
+<link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
 <div class="container">
-    <a href="display.php">View Saved Systems</a> | <a href="logout.php">Logout</a>
+    <a href="display.php">View Saved Systems</a>
+    <br><br>
+
+    <a href="logout.php">Logout</a>
+    
     <h1>PC Upgrade Advisor</h1>
     <form id="hardwareForm" class="card">
-        <label>Game:</label>
+
+    <label>Game:</label>
         <select name="game_id" required>
-            <option value="">Select Game</option>
+        <option value="">Select Game</option>
+
+        <?php
+            $games = $conn->query("SELECT * FROM games");
+            while($row = $games->fetch_assoc()) {
+        ?>
+
+        <option value="<?php echo $row['id']; ?>">
+            <?php echo $row['game_name']; ?>
+            </option>
+
             <?php
-            $games = $conn->query("SELECT id, name FROM games");
-            while($g = $games->fetch_assoc()) {
-                echo "<option value='" . htmlspecialchars($g['id']) . "'>" . htmlspecialchars($g['name']) . "</option>";
             }
             ?>
+
         </select>
-        <label>CPU:</label>
+        <br>
+
+    
+    <label>CPU:</label>
         <select name="cpu_id" required>
-            <option value="">Select CPU</option>
-            <?php
+        <option value="">Select CPU</option>
+
+        <?php
             $cpus = $conn->query("SELECT * FROM cpus");
-            while($c = $cpus->fetch_assoc()) {
-                $selected = ($c['id'] == $selectedCPU) ? "selected" : "";
-                echo "<option value='" . htmlspecialchars($c['id']) . "' $selected>" . htmlspecialchars($c['name']) . "</option>";
+            while($row = $cpus->fetch_assoc()) {
+        ?>
+
+        <option 
+             value="<?php echo $row['id']; ?>"
+            
+            <?php
+            if ($row['id'] == $selectedCPU) {
+                echo "selected";
             }
             ?>
+            >
+        <?php echo $row['name']; ?>
+        </option>
+
+        <?php
+         }
+        ?>
+
         </select>
-        <label>GPU:</label>
+        <br>
+
+    <label>GPU:</label>
         <select name="gpu_id" required>
-            <option value="">Select GPU</option>
-            <?php
+        <option value="">Select GPU</option>
+
+        <?php
             $gpus = $conn->query("SELECT * FROM gpus");
-            while($g = $gpus->fetch_assoc()) {
-                $selected = ($g['id'] == $selectedGPU) ? "selected" : "";
-                echo "<option value='" . htmlspecialchars($g['id']) . "' $selected>" . htmlspecialchars($g['name']) . "</option>";
+            while($row = $gpus->fetch_assoc()) {
+        ?>
+
+        <option 
+            value="<?php echo $row['id']; ?>"
+
+        <?php
+            if ($row['id'] == $selectedGPU) {
+                echo "selected";
             }
             ?>
-        </select>
-        <label>RAM:</label>
-        <select name="ram_amount" required>
-            <option value="">Select RAM</option>
+            >
+            <?php echo $row['name']; ?>
+            </option>
+
             <?php
-            $ramOptions = [8, 16, 24, 32, 48, 64];
-            foreach($ramOptions as $r) {
-                $selected = ($r == $selectedRAM) ? "selected" : "";
-                echo "<option value='$r' $selected>{$r}GB</option>";
             }
             ?>
         </select>
+        <br>
+
+    <label>RAM:</label>
+        <select name="ram_amount" required>
+        <option value="">Select RAM</option>
+
+            <option value="8"
+                <?php if($selectedRAM == 8){ echo "selected"; } ?>>
+                8GB
+            </option>
+
+            <option value="16"
+                <?php if($selectedRAM == 16){ echo "selected"; } ?>>
+                16GB
+            </option>
+
+            <option value="24"
+                <?php if($selectedRAM == 24){ echo "selected"; } ?>>
+                24GB
+            </option>
+
+            <option value="32"
+                <?php if($selectedRAM == 32){ echo "selected"; } ?>>
+                32GB
+            </option>
+
+            <option value="48"
+                <?php if($selectedRAM == 48){ echo "selected"; } ?>>
+                48GB
+            </option>
+
+            <option value="64"
+                <?php if($selectedRAM == 64){ echo "selected"; } ?>>
+                64GB
+            </option>
+
+        </select>
+        <br><br>
+
         <button type="submit">Analyze System</button>
+
     </form>
     <div id="result" class="card"></div>
 </div>
+
 <script>
 document.getElementById("hardwareForm").addEventListener("submit", function(e) {
     e.preventDefault();
-    fetch("analyze.php", {method: "POST", body: new FormData(this)})
-        .then(res => res.text())
-        .then(data => document.getElementById("result").innerHTML = data)
-        .catch(err => document.getElementById("result").innerHTML = "Error: " + err);
+    var formData = new FormData(this);
+
+    fetch("analyze.php", {method: "POST", body: formData})
+
+    .then(function(res) {
+        return res.text();
+
+    })
+
+    .then(function(data) {
+        document.getElementById("result").innerHTML = data;
+
+    })
+
+    .catch(function(err) {
+        document.getElementById("result").innerHTML = "Error: " + err;
+
+    });
+
 });
-</script>
 
 </script>
 
