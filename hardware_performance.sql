@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 09, 2026 at 09:50 PM
+-- Generation Time: May 11, 2026 at 03:35 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -129,8 +129,8 @@ CREATE TABLE `cpu_efficiency` (
 --
 
 CREATE TABLE `games` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
+  `game_id` int(11) NOT NULL,
+  `game_name` varchar(100) NOT NULL,
   `recommended_cpu_id` int(11) DEFAULT NULL,
   `recommended_gpu_id` int(11) DEFAULT NULL,
   `recommended_ram` int(11) DEFAULT NULL
@@ -140,7 +140,7 @@ CREATE TABLE `games` (
 -- Dumping data for table `games`
 --
 
-INSERT INTO `games` (`id`, `name`, `recommended_cpu_id`, `recommended_gpu_id`, `recommended_ram`) VALUES
+INSERT INTO `games` (`game_id`, `game_name`, `recommended_cpu_id`, `recommended_gpu_id`, `recommended_ram`) VALUES
 (1, 'Spider-Man 2', 16, 38, 16),
 (2, 'Crimson Desert', 21, 44, 16),
 (3, 'Cyberpunk 2077', 20, 43, 16),
@@ -230,11 +230,6 @@ CREATE TABLE `gpu_rankings` (
 -- (See below for the actual view)
 --
 CREATE TABLE `system_recommendation` (
-`id` int(11)
-,`cpu` varchar(100)
-,`gpu` varchar(100)
-,`game` varchar(100)
-,`recommendation` varchar(25)
 );
 
 -- --------------------------------------------------------
@@ -255,7 +250,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `created_at`) VALUES
-(1, 'SoaR_Sippy', '$2y$10$eVwvmd7U0CUBOYsFtzI85uX8JFYfxHXG/QO3KQtEhHiwupWpfKPr6', '2026-05-02 14:49:02');
+(1, 'SoaR_Sippy', '$2y$10$eVwvmd7U0CUBOYsFtzI85uX8JFYfxHXG/QO3KQtEhHiwupWpfKPr6', '2026-05-02 14:49:02'),
+(2, 'Nate', '$2y$10$RN1HYlTtWDwDyUc2pIMBUOyJZKBl85HsGP7UHook/Ea/cb7RWMYuK', '2026-05-11 00:32:00');
 
 -- --------------------------------------------------------
 
@@ -279,24 +275,7 @@ CREATE TABLE `user_systems` (
 --
 
 INSERT INTO `user_systems` (`id`, `cpu_id`, `gpu_id`, `user_id`, `ram_amount`, `ram_performance`, `game_id`, `created_at`) VALUES
-(6, 1, 1, 1, 8, 25.00, NULL, '2026-05-09 12:49:46'),
-(7, 1, 1, 1, 8, 25.00, NULL, '2026-05-09 12:49:46'),
-(8, 5, 1, 1, 8, 25.00, NULL, '2026-05-09 12:49:46'),
-(9, 5, 1, 1, 64, 200.00, NULL, '2026-05-09 12:49:46'),
-(10, 8, 4, 1, 8, 25.00, NULL, '2026-05-09 12:49:46'),
-(11, 8, 4, 1, 8, 25.00, NULL, '2026-05-09 12:49:46'),
-(12, 5, 4, 1, 32, 100.00, NULL, '2026-05-09 12:49:46'),
-(13, 1, 4, 1, 32, 100.00, 1, '2026-05-09 19:11:01'),
-(14, 5, 4, 1, 32, 100.00, 1, '2026-05-09 19:18:47'),
-(15, 5, 4, 1, 32, 100.00, 4, '2026-05-09 19:26:05'),
-(16, 5, 4, 1, 32, 100.00, 1, '2026-05-09 19:29:09'),
-(17, 5, 4, 1, 32, 100.00, 1, '2026-05-09 19:33:16'),
-(18, 5, 4, 1, 32, 100.00, 1, '2026-05-09 19:35:07'),
-(19, 13, 36, 1, 32, 100.00, 1, '2026-05-09 19:36:28'),
-(20, 13, 36, 1, 8, 25.00, 1, '2026-05-09 19:37:09'),
-(21, 18, 36, 1, 8, 25.00, 1, '2026-05-09 19:37:27'),
-(22, 18, 36, 1, 8, 25.00, 1, '2026-05-09 19:39:55'),
-(23, 18, 36, 1, 8, 25.00, 1, '2026-05-09 19:43:21');
+(30, 3, 1, 2, 32, 100.00, 1, '2026-05-11 00:57:46');
 
 --
 -- Triggers `user_systems`
@@ -371,7 +350,7 @@ ALTER TABLE `cpus`
 -- Indexes for table `games`
 --
 ALTER TABLE `games`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`game_id`),
   ADD KEY `recommended_cpu_id` (`recommended_cpu_id`),
   ADD KEY `recommended_gpu_id` (`recommended_gpu_id`);
 
@@ -419,7 +398,7 @@ ALTER TABLE `cpus`
 -- AUTO_INCREMENT for table `games`
 --
 ALTER TABLE `games`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `game_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `gpus`
@@ -431,13 +410,13 @@ ALTER TABLE `gpus`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `user_systems`
 --
 ALTER TABLE `user_systems`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- Constraints for dumped tables
@@ -466,7 +445,7 @@ ALTER TABLE `gpus`
 -- Constraints for table `user_systems`
 --
 ALTER TABLE `user_systems`
-  ADD CONSTRAINT `fk_game` FOREIGN KEY (`game_id`) REFERENCES `games` (`id`),
+  ADD CONSTRAINT `fk_game` FOREIGN KEY (`game_id`) REFERENCES `games` (`game_id`),
   ADD CONSTRAINT `user_systems_ibfk_1` FOREIGN KEY (`cpu_id`) REFERENCES `cpus` (`id`),
   ADD CONSTRAINT `user_systems_ibfk_2` FOREIGN KEY (`gpu_id`) REFERENCES `gpus` (`id`),
   ADD CONSTRAINT `user_systems_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
