@@ -1,5 +1,4 @@
 <?php
-
 include "connectdb.php";
 
 $id = $_POST["id"];
