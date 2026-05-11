@@ -10,7 +10,12 @@ body {
     margin: auto;
     text-align: center;
 }
-
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    text-align: center;
+}
 h1 {
     margin-bottom: 20px;
 }
@@ -114,9 +119,4 @@ button:hover {
     100%{
         opacity: 0;
     }
-}
-
-.container{
-    width: 50%;
-    margin: auto;
 }
