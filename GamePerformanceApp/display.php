@@ -52,7 +52,7 @@ if ($result->num_rows > 0) {
 }
 ?>
 <br><br>
-<a href="index.php">HomePage</a>
+<a href="index.php">Homepage</a>
 
 </div>
 </body>
