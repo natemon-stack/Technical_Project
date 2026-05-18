@@ -1,0 +1,117 @@
+body {
+    font-family: Arial;
+    background: #828186cd;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    width: 400px;
+    margin: auto;
+    text-align: center;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    text-align: center;
+}
+h1 {
+    margin-bottom: 20px;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+}
+
+label {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+}
+
+select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px;
+    width: 100%;
+    background: #000000;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #948f8f;
+}
+
+.result-box {
+    text-align: center;
+}
+
+.centerslide{
+    width: 100%;
+    max-width: 1000px;
+    aspect-ratio: 3840/1240;
+    margin: 20px auto;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+
+.centerslide img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0
+    ;
+    animation: slider 9s infinite;
+    opacity: 0;
+
+}
+
+.centerslide img:nth-child(1){
+    animation-delay: 0s;
+}
+
+.centerslide img:nth-child(2){
+
+    animation-delay: 3s;
+}
+
+.centerslide img:nth-child(3){
+
+    animation-delay: 6s;
+}
+
+@keyframes slider{
+    0%{
+        opacity: 0;
+    }
+    20%{
+        opacity: 1;
+    }
+    40%{
+        opacity: 1;
+    }
+    60%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 0;
+    }
+}
